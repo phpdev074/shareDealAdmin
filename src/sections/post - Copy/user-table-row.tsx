@@ -19,6 +19,7 @@ import { Typography } from '@mui/material';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { format } from 'date-fns';
+import { API_BASE_URL } from 'src/api/url';
 
 // ----------------------------------------------------------------------
 
@@ -47,6 +48,7 @@ interface Post {
     coordinates: [number, number];
   };
   name: string;
+  reportedBy: string;
   postId: {
     itemName: string;
     categoryId: string;
@@ -60,6 +62,7 @@ interface Post {
     endDate: string;
     description: string;
     files: File[];
+   
   };
 }
 
@@ -84,6 +87,7 @@ type UserTableRowProps = {
 export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) {
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const [openModal, setOpenModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     setOpenPopover(event.currentTarget);
@@ -95,6 +99,9 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+  const closeImage = () => {
+    setSelectedImage(null)
+  }
   
   return (
     <>
@@ -235,20 +242,70 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
         </Grid>
         
         <Typography fontWeight={600} mb={0.5}>Post Image:</Typography>
-        <Box sx={{ border: "2px solid #ccc", p: 1, display: "flex", justifyContent: "center" }}>
-  {(() => {
-    console.log("row.postId.files:", row.postId?.files); 
+    <Box
+  sx={{
+    border: "2px solid #ccc",
+    p: 1,
+    display: "flex",
+    justifyContent: "center",
+    gap: 1,
+    flexWrap: "wrap",
+    minHeight: "110px", 
+  }}
+>
+  {row.files && row.files.length > 0 ? (
+    row.files.map((file: any, index: number) => {
+      
+      const imageUrl = file.file.startsWith("http")
+        ? file.file
+        : `${API_BASE_URL}${file.file}`;
 
-    return row.postId?.files && row.postId.files.length > 0 ? (
-      <img
-      src={`http://localhost:4006${row.postId.files[0].file}`} 
-      alt="Post Image"
-      style={{ width: "100px", height: "100px", objectFit: "cover", borderRadius: "8px" }}
-    />
-    ) : (
-      <Typography>N/A</Typography>
-    );
-  })()}
+      return (
+        <Box
+          key={index}
+          sx={{
+            width: "100px",
+            height: "100px",
+            overflow: "hidden",
+            borderRadius: "8px",
+            backgroundColor: "#f0f0f0", 
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            transition: "all 0.5s ease-in-out", 
+            "&:hover": {
+            transform: "scale(1.1)", 
+            // border: "3px solid #999",
+          },
+        }}
+        onClick={() => setSelectedImage(imageUrl)} 
+      >
+
+
+
+          <img
+            src={imageUrl}
+            alt={`Post Image ${index + 1}`}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+              transition: "opacity 0.3s ease-in-out",
+            }}
+            loading="lazy"
+            onError={(e) => {
+              e.currentTarget.src = "/placeholder.jpg"; 
+              e.currentTarget.style.opacity = "1"; 
+            }}
+          />
+        </Box>
+      );
+    })
+  ) : (
+    <Typography>No Images Available</Typography>
+  )}
 </Box>            
               </Box>
               </>
@@ -278,7 +335,9 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
 
         <TableCell>{(row.postId?.salePrice)}</TableCell>
 
-        <TableCell>{row.count}</TableCell>
+        <TableCell>{row.userReport}</TableCell>
+
+        <TableCell align="center">{row.reportedBy ? row.reportedBy.length : 0}</TableCell>
 
         <TableCell>{row.userReport}</TableCell>
 

@@ -15,7 +15,7 @@ import { Icon } from '@iconify/react';
 import MenuItem, { menuItemClasses } from '@mui/material/MenuItem';
 // import { ShowToast } from '../../helpers/ToastService';
 import { Iconify } from 'src/components/iconify';
-import { api } from 'src/api/url';
+import { api,API_BASE_URL } from 'src/api/url';
 // ----------------------------------------------------------------------
 
 
@@ -61,6 +61,7 @@ type UserTableRowProps = {
   row: UserProps;
   selected: boolean;
   onSelectRow: () => void;
+ 
 };
 
 
@@ -82,21 +83,51 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
     setOpenModal(false);
   };
 
-  const handleblock = useCallback(() => {
-     
-  },[])
+ 
 
   const handleDelete = useCallback(async (id: string) => {
-    const confirmed = window.confirm("Are you sure you want to delete ?")
-    // console.log("=======>>>>>>")
+    handleClosePopover();
+    const confirmed = window.confirm("Are you sure you want to delete?");
+
     if (confirmed) {
-      // console.log(">>>>>>")
-        const response = await api.delete(`/api/deleteAccount?id=${id}`);
-        // console.log("@@@@@", response?.data?.data)
-        
+        try {
+            const response = await api.delete(`/admin/deleteAccountByAdmin?id=${id}`);
+            
+            if (response.status === 200) {
+                alert("User deleted successfully!");
+
+            } else {
+                alert("Failed to delete the user.");
+            }
+        } catch (error) {
+            console.error("Error deleting user:", error);
+            alert("An error occurred while deleting the user.");
+        }
     }
-    setOpenPopover(null);
-}, []);
+
+}, [handleClosePopover]);
+
+
+const handleblock = useCallback(async (id: string) => { 
+  handleClosePopover();
+  const confirmed = window.confirm("Are you sure you want to block this user?");
+  if (!confirmed) return;
+
+  try {
+    const response = await api.put(`/admin/blockUserByAdmin?id=${id}`);
+    console.log("response",response)
+    
+    if (response?.status === 200) {
+      alert("User has been blocked successfully!");
+    } else {
+      alert("Failed to block the user. Please try again.");
+    }
+  } catch (error) {
+    console.error(" Error blocking user:", error);
+    alert("An error occurred while blocking the user.");
+  }
+}, [handleClosePopover]);
+
 
 
   return (
@@ -129,7 +160,7 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
         <Box display="flex" justifyContent="center" mb={4}>
           <Avatar
             alt={row.name}
-            src={row.image }
+            src={row.image ? `${API_BASE_URL}${row.image}` : undefined} 
             sx={{ width: 100, height: 100, border: "2px solid #ccc" }} 
           />
         </Box>
@@ -215,7 +246,10 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
 
         <TableCell component="th" scope="row">
           <Box gap={2} display="flex" alignItems="center">
-            <Avatar alt={row.name} src={row.image} />
+          <Avatar 
+             alt={row.name} 
+             src={row.image ? `${API_BASE_URL}${row.image}` : undefined} 
+            />
             {/* {row.name} */}
           </Box>
         </TableCell>
@@ -276,7 +310,7 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
             {/* <Iconify icon="solar:trash-bin-trash-bold" /> */}
             Delete
           </MenuItem>
-          <MenuItem onClick={handleblock} sx={{ color: 'error.main' }}>
+          <MenuItem onClick={() => handleblock(row?._id)} sx={{ color: 'error.main' }}>
           {/* <Iconify icon="mdi:block" /> */}
             Block 
           </MenuItem>
@@ -300,6 +334,29 @@ export function UserBlockRow({ row, selected, onSelectRow }: UserTableRowProps) 
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+
+  const handleblock = useCallback(async (id: string) => {
+    handleClosePopover();
+    const confirmed = window.confirm("Are you sure you want to unblock this user?");
+    
+    if (!confirmed) return;
+  
+    try {
+      const response = await api.put(`/admin/unBlockUserByAdmin?id=${id}`);
+      console.log("response",response)
+      
+        if (response?.status === 200) {
+          alert("User has been unblocked successfully!");
+          
+        } else {
+          alert("Failed to unblock the user. Please try again.");
+        } 
+      
+    } catch (error) {
+      console.error(" Error unblocking user:", error);
+      alert("An error occurred while ubblocking the user.");
+    }
+  }, [handleClosePopover]);
 
   return (
     <>
@@ -332,8 +389,9 @@ export function UserBlockRow({ row, selected, onSelectRow }: UserTableRowProps) 
         <Box display="flex" justifyContent="center" mb={4}>
           <Avatar
             alt={row.name}
-            src={row.image }
+            src={row.image ? `${API_BASE_URL}${row.image}` : undefined}
             sx={{ width: 100, height: 100, border: "2px solid #ccc" }} 
+            // imgProps={{ loading: "lazy" }}
           />
         </Box>
 
@@ -416,12 +474,15 @@ export function UserBlockRow({ row, selected, onSelectRow }: UserTableRowProps) 
 
         <TableCell component="th" scope="row">
           <Box gap={2} display="flex" alignItems="center">
-          <Avatar alt={row.name} src={row.image} />
+          <Avatar 
+             alt={row.name} 
+             src={row.image ? `${API_BASE_URL}${row.image}` : undefined} 
+            />
             {/* {row.name} */}
           </Box>
         </TableCell>
 
-        <TableCell>{row.username}</TableCell>
+        <TableCell>{row.name}</TableCell>
 
         <TableCell>{row.gender}</TableCell>
 
@@ -470,7 +531,7 @@ export function UserBlockRow({ row, selected, onSelectRow }: UserTableRowProps) 
             View Details
           </MenuItem>
 
-          <MenuItem onClick={handleClosePopover} sx={{ color: 'error.main' }}>
+          <MenuItem onClick={() => handleblock(row?._id)} sx={{ color: 'error.main' }}>
           {/* <Iconify icon="mdi:check-circle" style={{ fontSize: '50px', color: 'green' }} /> */}
             UnBlock
           </MenuItem>

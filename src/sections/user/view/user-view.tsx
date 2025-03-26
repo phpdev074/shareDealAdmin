@@ -14,6 +14,8 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import { TableCell, TableRow } from '@mui/material';
+
 
 import { _users } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -41,7 +43,7 @@ export function UserView() {
   const [value, setValue] = React.useState('1');
 
   const fetchUsers = async () => {
-    const response = await api.get('/admin/getAllUsers'); 
+    const response = await api.get('/admin/getActiveUsers'); 
     
     setUserData(response?.data?.data)
     // console.log("response",response?.data?.data)
@@ -56,8 +58,8 @@ export function UserView() {
     // return response.data;
   }
 
-    const { data: getAllUsers, error, isLoading } = useQuery({
-      queryKey: ['/admin/getAllUsers'],
+    const { data: getActiveUsers, error, isLoading } = useQuery({
+      queryKey: ['/admin/getActiveUsers'],
       queryFn: fetchUsers,  
       staleTime: 60000, // Cache for 60 seconds
     });
@@ -108,6 +110,8 @@ export function UserView() {
     };
 
     // if (error) return <p>Error: {error.message}</p>;
+
+    
 
   return (
     <DashboardContent>
@@ -215,28 +219,38 @@ export function UserView() {
                 ]}
               />
               <TableBody>
-                {blockUserData
-                  .slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
-                  .map((row:any) => (
-                    <UserBlockRow
-                      key={row._id}
-                      row={row}
-                      
-                      selected={table.selected.includes(row._id)}
-                      onSelectRow={() => table.onSelectRow(row._id)}
-                    />
-                  ))}
+  {blockUserData.length === 0 ? (
+    <TableRow>
+      <TableCell colSpan={5} align="center">
+        <Typography variant="h6" color="textSecondary">
+          No user found
+        </Typography>
+      </TableCell>
+    </TableRow>
+  ) : (
+    blockUserData
+      .slice(
+        table.page * table.rowsPerPage,
+        table.page * table.rowsPerPage + table.rowsPerPage
+      )
+      .map((row: any) => (
+        <UserBlockRow
+          key={row._id}
+          row={row}
+          selected={table.selected.includes(row._id)}
+          onSelectRow={() => table.onSelectRow(row._id)}
+        />
+      ))
+  )}
 
-                <TableEmptyRows
-                  height={68}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, _users.length)}
-                />
+  <TableEmptyRows
+    height={68}
+    emptyRows={emptyRows(table.page, table.rowsPerPage, _users.length)}
+  />
 
-                {notFound && <TableNoData searchQuery={filterName} />}
-              </TableBody>
+  {notFound && <TableNoData searchQuery={filterName} />}
+</TableBody>
+
             </Table>
           </TableContainer>
         </Scrollbar></TabPanel>

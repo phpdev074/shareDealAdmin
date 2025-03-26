@@ -20,6 +20,7 @@ import Grid  from '@mui/material/Grid';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { format } from 'date-fns';
+import { API_BASE_URL } from 'src/api/url';
 
 // ----------------------------------------------------------------------
 
@@ -80,6 +81,7 @@ type UserTableRowProps = {
 export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) {
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const [openModal, setOpenModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -93,7 +95,9 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
   const handleCloseModal = () => {
     setOpenModal(false);
   };
-
+  const closeImage = () => {
+    setSelectedImage(null)
+  }
 
   // const MediaDisplay: React.FC<{ row: Post }> = ({ row }) => {
   //   useEffect(() => {
@@ -153,13 +157,13 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
             
     
             {/* Profile Picture */}
-            <Box display="flex" justifyContent="center" mb={4}>
+            {/* <Box display="flex" justifyContent="center" mb={4}>
               <Avatar
                 alt={row.name}
                 src={row.image }
                 sx={{ width: 100, height: 100, border: "2px solid #ccc" }} 
               />
-            </Box>
+            </Box> */}
     
             {/* Profile Details */}
             {/* <Typography variant="h5" textAlign="center" fontWeight={600} mb={2}>
@@ -241,17 +245,74 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
     </Grid>
     
     <Typography fontWeight={600} mb={0.5}>Post Image:</Typography>
-  <Box sx={{ border: "2px solid #ccc", p: 1, display: "flex", justifyContent: "center" }}>
-    {row.files && row.files.length > 0 ? (
-      <img
-        src={`http://localhost:4006${row.files[0].file}`} 
-        alt="Post Image"
-        style={{ width: "100px", height: "100px", objectFit: "cover", borderRadius: "8px" }}
-      />
-    ) : (
-      <Typography>N/A</Typography>
-    )}
-  </Box>
+    <Box
+  sx={{
+    border: "2px solid #ccc",
+    p: 1,
+    display: "flex",
+    justifyContent: "center",
+    gap: 1,
+    flexWrap: "wrap",
+    minHeight: "110px", 
+  }}
+>
+  {row.files && row.files.length > 0 ? (
+    row.files.map((file: any, index: number) => {
+      // Ensure the correct API URL
+      const imageUrl = file.file.startsWith("http")
+        ? file.file
+        : `${API_BASE_URL}${file.file}`;
+
+      return (
+        <Box
+          key={index}
+          sx={{
+            width: "100px",
+            height: "100px",
+            overflow: "hidden",
+            borderRadius: "8px",
+            backgroundColor: "#f0f0f0", 
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            transition: "all 0.5s ease-in-out", 
+            "&:hover": {
+            transform: "scale(1.1)", 
+            // border: "3px solid #999",
+          },
+        }}
+        onClick={() => setSelectedImage(imageUrl)} 
+      >
+
+
+
+          <img
+            src={imageUrl}
+            alt={`Post Image ${index + 1}`}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+              transition: "opacity 0.3s ease-in-out",
+            }}
+            loading="lazy"
+            onError={(e) => {
+              e.currentTarget.src = "/placeholder.jpg"; 
+              e.currentTarget.style.opacity = "1"; 
+            }}
+          />
+        </Box>
+      );
+    })
+  ) : (
+    <Typography>No Images Available</Typography>
+  )}
+</Box>
+
+
+
 
 
 

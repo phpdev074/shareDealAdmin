@@ -143,6 +143,7 @@ export function ReportPostView() {
                   { id: '', label: ' ' },
                   { id: 'salePrice', label: 'Sale Price' },
                   { id: '', label: ' ' },
+                  { id: 'report', label: 'ReportedBy',align: 'center' },
                   { id: '', label: ' ' },
                   { id: '' },
                 ]}

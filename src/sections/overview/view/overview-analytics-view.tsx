@@ -24,7 +24,6 @@ import { AnalyticsConversionRates } from '../analytics-conversion-rates';
 
 export function OverviewAnalyticsView() {
 
-  const[activeUser,setActiveUser] =useState([])
   const [blockUser, setBlockUsers] = useState([])
   const [monthlyUserData, setMonthlyUserData] =useState<number[]>([]);
 
@@ -36,18 +35,13 @@ export function OverviewAnalyticsView() {
     const response = await api.get('/admin/getAllUsers'); // Adjust API endpoint as needed
     return response.data;
   }
-  
-  const fetchActiveUsers = async () => {
-    const response = await api.get('/admin/getActiveUsers'); // Adjust API endpoint as needed
-    // return response.data;
-    setActiveUser(response?.data?.data?.totalActiveUsers)
-  }
+ 
 
   const fetchBlockUsers = async () => {
     const response = await api.get('/admin/getblockUserByAdmin'); // Adjust API endpoint as needed
     // return response.data;
     setBlockUsers(response?.data?.data.totalUsers)
-    console.log("response===",response)
+    // console.log("response===",response)
 
   }
   const fetchPost = async () => {
@@ -55,66 +49,67 @@ export function OverviewAnalyticsView() {
     return response.data;
     // console.log("==================>>>>>",response?.data?.data?.totalPosts)
   }
+  const fetchActivePosts = async () => {
+    const response = await api.get('/admin/getActivePost'); // Adjust API endpoint as needed
+    return response.data;
+  }
 
   const fetchMonthlyUserData = async () => {
-    const response = await api.get('/admin/getUsersByMonth'); // Make sure your API endpoint matches
-    return response.data; // Expected format: [{ month: 1, userCount: 30 }, { month: 2, userCount: 50 }, ...]
+    const response = await api.get('/admin/getUsersByMonth'); 
+    return response.data;
   };
 
 
   const { data: getAllUsers, error, isLoading } = useQuery({
-    queryKey: ['admin/getAllUsers'],
+    queryKey: ['/admin/getAllUsers'],
     queryFn: fetchUsers,
-    staleTime: 60000, // Cache for 60 seconds
+    staleTime: 60000, 
   });
-  const { data: activeUsers, error: activeUsersError, isLoading: activeUsersLoading } = useQuery({
-    queryKey: ['admin/getActiveUsers'],
-    queryFn: fetchActiveUsers,
-    staleTime: 60000,
-  });
+ 
   const { data: blockUsers , error: blockUsersError, isLoading: blockUsersLoading } = useQuery({
-    queryKey: ['admin/getBlockUsers'],
+    queryKey: ['/admin/getBlockUsers'],
     queryFn: fetchBlockUsers,
     staleTime: 60000,
   });
   const { data: getAllPost , error: getAllPostError, isLoading: getAllPostLoading } = useQuery({
-    queryKey: ['admin/getAllPost'],
+    queryKey: ['/admin/getAllPost'],
     queryFn: fetchPost,
     staleTime: 60000,
   });
+  const { data: getActivePost, error: getActivePostError, isLoading:getActivePostLoading } = useQuery({
+    queryKey: ['/admin/getActivePost'],
+    queryFn: fetchActivePosts,
+    staleTime: 60000, 
+  });
   const { data: monthlyUsers, error: monthlyUsersError, isLoading: monthlyUsersLoading} = useQuery({
-    queryKey: ['admin/getUsersByMonth'],
+    queryKey: ['/admin/getUsersByMonth'],
     queryFn: fetchMonthlyUserData,
-    staleTime: 60000, // Cache for 60 seconds
+    staleTime: 60000, 
   });
 
   useEffect(() => {
     if (monthlyUsers) {
-      // Extract user count for each month from the fetched data
-      const userCounts = Array(12).fill(0); // Initialize array with 12 months
+      
+      const userCounts = Array(12).fill(0); 
       monthlyUsers.forEach((entry:any) => {
-        userCounts[entry._id.month - 1] = entry.userCount; // Populate counts for each month
+        userCounts[entry._id.month - 1] = entry.userCount; 
       });
-      setMonthlyUserData(userCounts); // Set the monthly user data
+      setMonthlyUserData(userCounts); 
     }
   }, [monthlyUsers]);
-  if (isLoading || activeUsersLoading || blockUsersLoading || getAllPostLoading || monthlyUsersLoading) {
+  if (isLoading ||  blockUsersLoading || getAllPostLoading || monthlyUsersLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
         <CircularProgress />
       </Box>
     );
   }
-  // Example calculations (Modify as needed)
+ 
   const totalUsers = getAllUsers?.data?.length || 0
   const totalBlockedUsers = Number(blockUser) || 0
   const totalActiveUsers = totalUsers - totalBlockedUsers;
   const totalPosts = getAllPost?.data?.totalPosts.length || 0
-
-
-  // const activeUsers = users.filter((user) => user.active).length;
-  // const blockedUsers = users.filter((user) => user.status === 'blocked').length;
-  // const messages = Math.floor(totalUsers * 0.1); // Example logic
+  const totalActivePost = getActivePost?.data?.totalPosts || 0
 
 
   return (
@@ -170,7 +165,7 @@ export function OverviewAnalyticsView() {
           <AnalyticsWidgetSummary
             title="Active Deals"
             percent={3.6}
-            total={totalPosts}
+            total={totalActivePost}
             color="error"
             icon={<img alt="icon" src="/assets/icons/glass/ic-glass-message.svg" />}
             chart={{
@@ -188,7 +183,7 @@ export function OverviewAnalyticsView() {
                 { label: 'Total Users', value: totalUsers },
                 { label: 'Active Users', value: totalActiveUsers },
                 { label: 'Total Deals', value: totalPosts },
-                { label: 'Active Deals', value: totalPosts },
+                { label: 'Active Deals', value: totalActivePost },
               ],
               colors:['#332247','#9549f2','#eda71a','#e34b30']
             }}
