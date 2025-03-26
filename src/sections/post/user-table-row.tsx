@@ -20,7 +20,7 @@ import Grid  from '@mui/material/Grid';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { format } from 'date-fns';
-import { API_BASE_URL } from 'src/api/url';
+import { api,API_BASE_URL } from 'src/api/url';
 
 // ----------------------------------------------------------------------
 
@@ -95,6 +95,28 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
   const closeImage = () => {
     setSelectedImage(null)
   }
+
+  const handleDelete = useCallback(async (id: string) => {
+      handleClosePopover();
+      const confirmed = window.confirm("Are you sure you want to delete?");
+  
+      if (confirmed) {
+          try {
+              const response = await api.delete(`/api/post?id=${id}`);
+              
+              if (response.status === 200) {
+                  alert("User deleted successfully!");
+  
+              } else {
+                  alert("Failed to delete the user.");
+              }
+          } catch (error) {
+              console.error("Error deleting user:", error);
+              alert("An error occurred while deleting the user.");
+          }
+      }
+  
+  }, [handleClosePopover]);
 
 
   return (
@@ -340,7 +362,7 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
             View Details
           </MenuItem>
 
-          <MenuItem onClick={handleClosePopover} sx={{ color: 'error.main' }}>
+          <MenuItem onClick={() => handleDelete(row?._id)} sx={{ color: 'error.main' }}>
             {/* <Iconify icon="solar:trash-bin-trash-bold" /> */}
             Delete
           </MenuItem>
