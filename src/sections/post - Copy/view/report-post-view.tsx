@@ -34,29 +34,6 @@ interface File {
   _id: string;
 }
 
-// interface Post {
-//   _id: string;
-//   userId: string;
-//   name: string;
-//   categoryId: string;
-//   content: string;
-//   files: File[];
-//   fileType: string;
-//   createdAt: string;
-//   updatedAt: string;
-//   __v: number;
-//   options: any[];
-//   votes: any[];
-//   location: {
-//     type: string;
-//     coordinates: [number, number];
-//   };
-// }
-
-// type Table = {
-//   selected: string[];
-//   onSelectRow: (id: string) => void;
-// };
 // ----------------------------------------------------------------------
 
 export function ReportPostView() {
@@ -66,7 +43,7 @@ export function ReportPostView() {
     const response = await api.get('/admin/getReportPost'); 
     setUserData(response?.data?.data)
     // return response.data;
-    console.log("123654798",response?.data?.data);
+    // console.log("123654798",response?.data?.data);
   }
     const { data: getReportPost, error, isLoading } = useQuery({
       queryKey: ['/admin/getReportPost'],
@@ -87,10 +64,10 @@ export function ReportPostView() {
     </Box>
   );
   const dataFiltered: UserProps[] = applyFilter({
-// <<<<<<< Tabnine <<<<<<<
+
     // inputData: _users,//-
     inputData: userData,//+
-// >>>>>>> Tabnine >>>>>>>// {"conversationId":"d93ec7bf-3bb2-4650-9d97-bbb060635f5d","source":"instruct"}
+
     comparator: getComparator(table.order, table.orderBy),
     filterName,
   });
@@ -99,28 +76,8 @@ export function ReportPostView() {
 
   return (
     <DashboardContent>
-      {/* <Box display="flex" alignItems="center" mb={5}>
-        <Typography variant="h4" flexGrow={1}>
-          Users
-        </Typography>
-        <Button
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-        >
-          New user
-        </Button>
-      </Box> */}
-
+      
       <Card>
-        {/* <UserTableToolbar
-          numSelected={table.selected.length}
-          filterName={filterName}
-          onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setFilterName(event.target.value);
-            table.onResetPage();
-          }}
-        /> */}
 
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>

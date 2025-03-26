@@ -165,11 +165,6 @@ const handleblock = useCallback(async (id: string) => {
           />
         </Box>
 
-        {/* Profile Details */}
-        {/* <Typography variant="h5" textAlign="center" fontWeight={600} mb={2}>
-          Profile
-        </Typography> */}
-
 <Grid container spacing={3}>
   {/* First Row - Name & Username */}
   <Grid item xs={6}>
@@ -263,10 +258,6 @@ const handleblock = useCallback(async (id: string) => {
         <TableCell align="center">
           {row.email}
         </TableCell>
-
-        {/* <TableCell>
-          <Label color={(row.status === 'banned' && 'error') || 'success'}>{row.status}</Label>
-        </TableCell> */}
 
         <TableCell align="right">
           <IconButton onClick={handleOpenPopover}>
@@ -395,11 +386,6 @@ export function UserBlockRow({ row, selected, onSelectRow }: UserTableRowProps) 
           />
         </Box>
 
-        {/* Profile Details */}
-        {/* <Typography variant="h5" textAlign="center" fontWeight={600} mb={2}>
-          Profile
-        </Typography> */}
-
 <Grid container spacing={3}>
   {/* First Row - Name & Username */}
   <Grid item xs={6}>
@@ -486,15 +472,10 @@ export function UserBlockRow({ row, selected, onSelectRow }: UserTableRowProps) 
 
         <TableCell>{row.gender}</TableCell>
 
-        {/* <TableCell>{format(new Date(row.createdAt), 'PPpp')}</TableCell> */}
-        {/* <TableCell>{row.role}</TableCell> */}
         <TableCell align="center">
           {row.email}
         </TableCell>
 
-        {/* <TableCell>
-          <Label color={(row.status === 'banned' && 'error') || 'success'}>{row.status}</Label>
-        </TableCell> */}
 
         <TableCell align="right">
           <IconButton onClick={handleOpenPopover}>

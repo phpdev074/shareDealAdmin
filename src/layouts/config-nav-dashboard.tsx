@@ -18,11 +18,6 @@ export const navData = [
     path: '/user',
     icon: icon('users'),
   },
-  // {
-  //   title: 'BLocked User',
-  //   path: '/blockedUser',
-  //   icon: icon('ic-block'),
-  // },
   {
     title: 'Post',
     path: '/post',
@@ -33,20 +28,10 @@ export const navData = [
     path: '/reportpost',
     icon: icon('ic-report'),
   },
-  // {
-  //   title: 'Add Product',
-  //   path: '/products',
-  //   icon: icon('ic-cart'),
-  // },
   {
     title: 'Settings',
     path: '/setting',
     icon: icon('settings'),
   },
-  // {
-  //   title: 'Sign in',
-  //   path: '/sign-in',
-  //   icon: icon('ic-lock'),
-  // },
   
 ];

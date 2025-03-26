@@ -64,10 +64,7 @@ export type UserProps = {
   _id: string;
   name: string;
   files: string;
-  // status: string;
-  // company: string;
-  // avatarUrl: string;
-  // isVerified: boolean; 
+  
   content: string;
   createdAt: string;
 };
@@ -99,13 +96,6 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
     setSelectedImage(null)
   }
 
-  // const MediaDisplay: React.FC<{ row: Post }> = ({ row }) => {
-  //   useEffect(() => {
-  //     console.log("Row Data:", row);
-  //     if (row.files) {
-  //       console.log("Files:", row.files);
-  //     }
-  //   }, [row]);
 
   return (
     <>
@@ -153,25 +143,9 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
   }}
 >
 
-            {/* Close Icon */}
-            
-    
-            {/* Profile Picture */}
-            {/* <Box display="flex" justifyContent="center" mb={4}>
-              <Avatar
-                alt={row.name}
-                src={row.image }
-                sx={{ width: 100, height: 100, border: "2px solid #ccc" }} 
-              />
-            </Box> */}
-    
-            {/* Profile Details */}
-            {/* <Typography variant="h5" textAlign="center" fontWeight={600} mb={2}>
-              Profile
-            </Typography> */}
     
     <Grid container spacing={3}>
-      {/* First Row - Name & Username */}
+      
       <Grid item xs={6}>
         <Typography fontWeight={600} mb={0.5}>Name:</Typography>
         <Box sx={{ border: "2px solid #ccc", p: 1,  }}>
@@ -184,8 +158,7 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
           <Typography>{row.categoryId || "N/A"}</Typography>
         </Box>
       </Grid>
-    
-      {/* Second Row - Email & Phone Number */}
+   
       <Grid item xs={6}>
         <Typography fontWeight={600} mb={0.5}>Price:</Typography>
         <Box sx={{ border: "2px solid #ccc",  p: 1,  }}>
@@ -199,7 +172,6 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
         </Box>
       </Grid>
     
-      {/* Third Row - Date of Birth & Gender */}
       <Grid item xs={6}>
         <Typography fontWeight={600} mb={0.5}>Deal Info:</Typography>
         <Box sx={{ border: "2px solid #ccc",  p: 1,  }}>
@@ -213,7 +185,6 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
         </Box>
       </Grid>
     
-      {/* Fourth Row - Address (Full Width) */}
       <Grid item xs={6}>
         <Typography fontWeight={600} mb={0.5}>Store Name:</Typography>
         <Box sx={{ border: "2px solid #ccc",  p: 1,  }}>
@@ -221,7 +192,6 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
         </Box>
       </Grid>
     
-      {/* Fifth Row - Bio (Full Width) */}
       <Grid item xs={6}>
       <Typography fontWeight={600} mb={0.5}>Location:</Typography>
       <Box sx={{ border: "2px solid #ccc", p: 1 }}>
@@ -311,13 +281,6 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
   )}
 </Box>
 
-
-
-
-
-
-
-
             
           </Box>
           </>
@@ -328,7 +291,7 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
 
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
         <TableCell padding="checkbox">
-          {/* <Checkbox disableRipple checked={selected} onChange={onSelectRow} /> */}
+          
         </TableCell>
 
         <TableCell component="th" scope="row">
@@ -341,14 +304,6 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
         <TableCell>{row.categoryId}</TableCell>
 
         <TableCell>{row.salePrice}</TableCell>
-
-        {/* <TableCell align="center">
-          {row.email}
-        </TableCell> */}
-
-        {/* <TableCell>
-          <Label color={(row.status === 'banned' && 'error') || 'success'}>{row.status}</Label>
-        </TableCell> */}
 
         <TableCell align="right">
           <IconButton onClick={handleOpenPopover}>

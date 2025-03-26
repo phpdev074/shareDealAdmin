@@ -70,10 +70,6 @@ export type UserProps = {
   _id: string;
   name: string;
   files: string;
-  // status: string;
-  // company: string;
-  // avatarUrl: string;
-  // isVerified: boolean; 
   reason: string;
   createdAt: string;
 };
@@ -161,11 +157,6 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
                     sx={{ width: 100, height: 100, border: "2px solid #ccc" }} 
                   />
                 </Box>
-        
-                {/* Profile Details */}
-                {/* <Typography variant="h5" textAlign="center" fontWeight={600} mb={2}>
-                  Profile
-                </Typography> */}
         
         <Grid container spacing={3}>
           {/* First Row - Name & Username */}
@@ -340,14 +331,6 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
         <TableCell align="center">{row.reportedBy ? row.reportedBy.length : 0}</TableCell>
 
         <TableCell>{row.userReport}</TableCell>
-
-        {/* <TableCell align="center">
-          {row.email}
-        </TableCell> */}
-
-        {/* <TableCell>
-          <Label color={(row.status === 'banned' && 'error') || 'success'}>{row.status}</Label>
-        </TableCell> */}
 
         <TableCell align="right">
           <IconButton onClick={handleOpenPopover}>

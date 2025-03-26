@@ -27,32 +27,23 @@ const fetchPosts = async () => {
 
 const fetchActiveUsers = async () => {
   const response = await api.get('/admin/getActiveUsers');
-  return response.data.totalActiveUsers; // Ensure the API returns { totalActiveUsers: X }
+  return response.data.totalActiveUsers; 
 };
 
 const fetchBlockUsers = async () => {
   const response = await api.get('/admin/getBlockUsers');
-  return response.data.totalBlockUsers; // Ensure the API returns { totalActiveUsers: X }
+  return response.data.totalBlockUsers; 
 };
 
 const fetchPostContent = async () => {
   const response = await api.get('/api/getListPost');
-  return response.data; // Ensure it contains the required content
+  return response.data; 
 };
-
-
-// Example POST request function
-// export const createUser = async (userData) => {
-//   const response = await api.post('/users', userData);
-//   return response.data;
-// };
-
 
 export const deleteUser = async (id: string) => {
   try {
-    // Send DELETE request to the server with the user ID
     const response = await axios.delete(`${API_BASE_URL}/users/${id}`);
-    return response.data; // Return the response data from the API
+    return response.data; 
   } catch (error) {
     console.error('Error deleting user:', error);
     throw new Error('Failed to delete user');

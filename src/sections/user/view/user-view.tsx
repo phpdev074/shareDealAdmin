@@ -46,33 +46,31 @@ export function UserView() {
     const response = await api.get('/admin/getActiveUsers'); 
     
     setUserData(response?.data?.data)
-    // console.log("response",response?.data?.data)
-    // return response.data;
+
   }
 
   const fetchBlockedUsers = async () => {
     const response = await api.get('/api/getBlockUsers'); 
     
     setBlockUserData(response?.data?.data?.totalBlockUsers)
-    // console.log("response====",response?.data?.data?.totalBlockUsers)
-    // return response.data;
+ 
   }
 
     const { data: getActiveUsers, error, isLoading } = useQuery({
       queryKey: ['/admin/getActiveUsers'],
       queryFn: fetchUsers,  
-      staleTime: 60000, // Cache for 60 seconds
+      staleTime: 60000, 
     });
 
     const { data: getBlockUsers, error:getBlockUsersError, isLoading:getBlockUsersisLoading } = useQuery({
       queryKey: ['/api/getBlockUsers'],
       queryFn: fetchBlockedUsers,  
-      staleTime: 60000, // Cache for 60 seconds
+      staleTime: 60000, 
     });
 
 
     const table = useTable();
-    // console.log("=====>>>userData",userData)
+    
     const [filterName, setFilterName] = useState('');
     if (isLoading) return (
       <Box
@@ -85,23 +83,15 @@ export function UserView() {
       </Box>
     );
     const dataFiltered: UserProps[] = applyFilter({
-      // <<<<<<< Tabnine <<<<<<<
+      
       // inputData: _users,//-
       inputData: userData,//+
       inputBlockData: blockUserData,
-      // >>>>>>> Tabnine >>>>>>>// {"conversationId":"d93ec7bf-3bb2-4650-9d97-bbb060635f5d","source":"instruct"}
+      
       comparator: getComparator(table.order, table.orderBy),
       filterName,
     });
 
-    // const dataFiltere: UserProps[] = applyFilters({
-    //   // <<<<<<< Tabnine <<<<<<<
-    //   inputData: _users,//-
-    //   inputBlockData: blockUserData,
-    //   // >>>>>>> Tabnine >>>>>>>// {"conversationId":"d93ec7bf-3bb2-4650-9d97-bbb060635f5d","source":"instruct"}
-    //   comparator: getComparator(table.order, table.orderBy),
-    //   filterName,
-    // });
     
     const notFound = !dataFiltered.length && !!filterName;
 
@@ -109,23 +99,13 @@ export function UserView() {
       setValue(newValue);
     };
 
-    // if (error) return <p>Error: {error.message}</p>;
-
-    
-
   return (
     <DashboardContent>
       <Box display="flex" alignItems="center" mb={5}>
         <Typography variant="h4" flexGrow={1}>
           Users
         </Typography>
-        {/* <Button
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-        >
-          New user
-        </Button> */}
+        
       </Box>
 
       <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -258,67 +238,7 @@ export function UserView() {
     </Box>
 
       <Card>
-        {/* <UserTableToolbar
-          numSelected={table.selected.length}
-          filterName={filterName}
-          onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setFilterName(event.target.value);
-            table.onResetPage();
-          }}
-        /> */}
-
-        {/* <Scrollbar>
-          <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
-              <UserTableHead
-                order={table.order}
-                orderBy={table.orderBy}
-                rowCount={_users.length}
-                numSelected={table.selected.length}
-                onSort={table.onSort}
-                onSelectAllRows={(checked) =>
-                  table.onSelectAllRows(
-                    checked,
-                    _users.map((user) => user.id)
-                  )
-                }
-                headLabel={[
-                  { id: 'image', label: 'Image' },
-                  { id: 'name', label: 'Name' },
-              
-                  { id: 'gender', label: 'Gender' },
-                  // { id: 'role', label: 'Role' },
-                  { id: 'email', label: 'Email', align: 'center' },
-                  // { id: 'status', label: 'Status' },
-                  { id: '' },
-                ]}
-              />
-              <TableBody>
-                {userData
-                  .slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
-                  .map((row:any) => (
-                    <UserTableRow
-                      key={row._id}
-                      row={row}
-                      
-                      selected={table.selected.includes(row._id)}
-                      onSelectRow={() => table.onSelectRow(row._id)}
-                    />
-                  ))}
-
-                <TableEmptyRows
-                  height={68}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, _users.length)}
-                />
-
-                {notFound && <TableNoData searchQuery={filterName} />}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Scrollbar> */}
+        
 
         <TablePagination
           component="div"

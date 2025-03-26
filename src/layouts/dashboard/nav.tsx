@@ -101,7 +101,7 @@ export function NavMobile({
           pt: 2.5,
           px: 2.5,
           overflow: 'unset',
-          bgcolor: 'var(--layout-nav-item-hover-bg)',
+          bgcolor: '#332247',
           width: 'var(--layout-nav-mobile-width)',
           ...sx,
         },
@@ -119,15 +119,14 @@ export function NavContent({ data, slots, workspaces, sx }: NavContentProps) {
 
   return (
     <>
-      {/* <Logo /> */}
-      {/* logo */}
+      
       <img src="/assets/icons/glass/logo2.png" alt="logo" style={{height:"140px",width: "140px", marginLeft:"50px" }} />
-      {/* <h4 style={{marginLeft:"80px"}}>S E P</h4> */}
+      
       
 
       {slots?.topArea}
 
-      {/* <WorkspacesPopover data={workspaces} sx={{ my: 2 }} /> */}
+      
 
       <Scrollbar fillContent>
         <Box component="nav" display="flex" flex="1 1 auto" flexDirection="column" sx={sx}>

@@ -35,45 +35,20 @@ interface File {
   type: string;
   _id: string;
 }
-
-// interface Post {
-//   _id: string;
-//   userId: string;
-//   name: string;
-//   categoryId: string;
-//   content: string;
-//   files: File[];
-//   fileType: string;
-//   createdAt: string;
-//   updatedAt: string;
-//   __v: number;
-//   options: any[];
-//   votes: any[];
-//   location: {
-//     type: string;
-//     coordinates: [number, number];
-//   };
-// }
-
-// type Table = {
-//   selected: string[];
-//   onSelectRow: (id: string) => void;
-// };
 // ----------------------------------------------------------------------
 
 export function PostView() {
   const [userData, setUserData] = useState([]);
 
   const fetchUsers = async () => {
-    const response = await api.get('/admin/getAllPost'); // Adjust API endpoint as needed
+    const response = await api.get('/admin/getAllPost'); 
     setUserData(response?.data?.data?.totalPosts)
-    // return response.data;
-    // console.log("===========",response?.data?.data?.totalPosts)
+    
   }
     const { data: getAllPost, error, isLoading } = useQuery({
       queryKey: ['/admin/getAllPost'],
       queryFn: fetchUsers,  
-      staleTime: 60000, // Cache for 60 seconds
+      staleTime: 60000, 
     });
   const table = useTable();
     
@@ -85,14 +60,14 @@ export function PostView() {
       alignItems="center"
       height="100vh"
     >
-      <CircularProgress /> {/* This is the loader */}
+      <CircularProgress /> 
     </Box>
   );
   const dataFiltered: UserProps[] = applyFilter({
-// <<<<<<< Tabnine <<<<<<<
+
     // inputData: _users,//-
     inputData: userData,//+
-// >>>>>>> Tabnine >>>>>>>// {"conversationId":"d93ec7bf-3bb2-4650-9d97-bbb060635f5d","source":"instruct"}
+
     comparator: getComparator(table.order, table.orderBy),
     filterName,
   });
@@ -101,28 +76,10 @@ export function PostView() {
 
   return (
     <DashboardContent>
-      {/* <Box display="flex" alignItems="center" mb={5}>
-        <Typography variant="h4" flexGrow={1}>
-          Users
-        </Typography>
-        <Button
-          variant="contained"
-          color="inherit"
-          startIcon={<Iconify icon="mingcute:add-line" />}
-        >
-          New user
-        </Button>
-      </Box> */}
+      
 
       <Card>
-        {/* <UserTableToolbar
-          numSelected={table.selected.length}
-          filterName={filterName}
-          onFilterName={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setFilterName(event.target.value);
-            table.onResetPage();
-          }}
-        /> */}
+        
 
         <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
