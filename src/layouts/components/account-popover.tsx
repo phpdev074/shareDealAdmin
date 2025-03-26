@@ -1,5 +1,5 @@
 import type { IconButtonProps } from '@mui/material/IconButton';
-
+import { useNavigate } from 'react-router-dom';
 import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -49,6 +49,13 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
     },
     [handleClosePopover, router]
   );
+
+  const naviagte = useNavigate();
+  const handleNavigate = () => {
+    naviagte("/");
+  }
+
+  
 
   return (
     <>
@@ -129,7 +136,7 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Box sx={{ p: 1 }}>
-          <Button fullWidth color="error" size="medium" variant="text">
+          <Button fullWidth color="error" size="medium" variant="text" onClick={handleNavigate}>
             Logout
           </Button>
         </Box>
