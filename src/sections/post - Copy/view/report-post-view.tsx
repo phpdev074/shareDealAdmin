@@ -105,7 +105,7 @@ export function ReportPostView() {
                   { id: '', label: ' ' },
                   { id: 'reportReason', label: 'Report Reason' },
                   { id: '', label: ' ' },
-                  { id: 'report', label: 'Reporte Count',align: 'center' },
+                  { id: 'report', label: 'Report Count',align: 'center' },
                   { id: '', label: ' ' },
                   { id: '' },
                 ]}

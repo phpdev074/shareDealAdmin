@@ -301,7 +301,7 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
   ) : (
     <Typography>No Images Available</Typography>
   )}
-</Box>
+    </Box>
 
             
           </Box>
@@ -333,6 +333,62 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
           </IconButton>
         </TableCell>
       </TableRow>
+
+
+
+
+
+
+      <Modal
+        open={!!selectedImage}
+        onClose={() => setSelectedImage(null)}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Box
+          sx={{
+            position: "relative",
+            backgroundColor: "white",
+            p: 2,
+            borderRadius: "10px",
+            boxShadow: 24,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <IconButton
+  sx={{
+    position: "absolute",
+    top: 8,
+    right: 8,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    color: "white",
+    "&:hover": { backgroundColor: "rgba(0,0,0,0.8)" },
+  }}
+  onClick={() => setSelectedImage(null)}
+>
+  <Icon icon="mdi:close" width="24" height="24" />
+</IconButton>
+          <img
+            src={selectedImage || ""}
+            alt="Selected Post"
+            style={{
+              maxWidth: "90vw",
+              maxHeight: "90vh",
+              borderRadius: "8px",
+              objectFit: "contain",
+            }}
+          />
+        </Box>
+      </Modal>
+
+
+
+
 
       <Popover
         open={!!openPopover}

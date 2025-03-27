@@ -47,7 +47,7 @@ export function PostView() {
     setUserData(response?.data?.data?.totalPosts)
     
   }
-    const { data: getAllPost, error, isLoading } = useQuery({
+    const { data: getAllPost, error, isLoading,isFetching } = useQuery({
       queryKey: ['/admin/getAllPost'],
       queryFn: fetchUsers,  
       staleTime: 0,
@@ -55,7 +55,7 @@ export function PostView() {
   const table = useTable();
     
   const [filterName, setFilterName] = useState('');
-  if (isLoading) return (
+  if (isLoading || isFetching) return (
     <Box
       display="flex"
       justifyContent="center"

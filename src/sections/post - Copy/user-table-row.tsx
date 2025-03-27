@@ -98,6 +98,7 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  
 
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
     setOpenPopover(event.currentTarget);
@@ -315,6 +316,7 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
     gap: 1,
     flexWrap: "wrap",
     minHeight: "110px", 
+    
   }}
 >
 {Array.isArray(row.postId?.files) && row.postId.files.length > 0 ? (
@@ -335,7 +337,13 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
             height: 100,
             border: "2px solid #ccc",
             borderRadius: 0, 
+            cursor: "pointer",
+            transition: "all 0.5s ease-in-out",
+            "&:hover": {
+            transform: "scale(1.1)",
+    },
           }}
+          onClick={() => setSelectedImage(imageUrl)} 
         />
       );
     })
@@ -384,6 +392,67 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
         </TableCell>
       </TableRow>
       ))}
+
+
+
+
+
+
+
+
+
+      <Modal
+              open={!!selectedImage}
+              onClose={() => setSelectedImage(null)}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Box
+                sx={{
+                  position: "relative",
+                  backgroundColor: "white",
+                  p: 2,
+                  borderRadius: "10px",
+                  boxShadow: 24,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <IconButton
+        sx={{
+          position: "absolute",
+          top: 8,
+          right: 8,
+          backgroundColor: "rgba(0,0,0,0.5)",
+          color: "white",
+          "&:hover": { backgroundColor: "rgba(0,0,0,0.8)" },
+        }}
+        onClick={() => setSelectedImage(null)}
+      >
+        <Icon icon="mdi:close" width="24" height="24" />
+      </IconButton>
+                <img
+                  src={selectedImage || ""}
+                  alt="Selected Post"
+                  style={{
+                    maxWidth: "90vw",
+                    maxHeight: "90vh",
+                    borderRadius: "8px",
+                    objectFit: "contain",
+                  }}
+                />
+              </Box>
+            </Modal>
+
+
+
+
+
+            
 
       <Popover
         open={!!openPopover}
