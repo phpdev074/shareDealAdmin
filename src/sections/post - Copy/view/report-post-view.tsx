@@ -76,7 +76,12 @@ export function ReportPostView() {
 
   return (
     <DashboardContent>
-      
+      <Box display="flex" alignItems="center" mb={5}>
+        <Typography variant="h4" flexGrow={1}>
+          Reported Post
+        </Typography>
+        
+      </Box>
       <Card>
 
         <Scrollbar>
@@ -95,12 +100,12 @@ export function ReportPostView() {
                   )
                 }
                 headLabel={[
+                  { id: 'reportedBY', label: 'ReportedBy' },
                   { id: 'itemName', label: 'Item Name' },
-                  { id: 'categoryId', label: 'Category' },
                   { id: '', label: ' ' },
-                  { id: 'salePrice', label: 'Sale Price' },
+                  { id: 'reportReason', label: 'Report Reason' },
                   { id: '', label: ' ' },
-                  { id: 'report', label: 'ReportedBy',align: 'center' },
+                  { id: 'report', label: 'Reporte Count',align: 'center' },
                   { id: '', label: ' ' },
                   { id: '' },
                 ]}

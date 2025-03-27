@@ -38,9 +38,11 @@ interface File {
 // ----------------------------------------------------------------------
 
 export function PostView() {
+  console.log("🚀 PostView component mounted or updated");
   const [userData, setUserData] = useState([]);
 
   const fetchUsers = async () => {
+    console.log("fetchUsers....")
     const response = await api.get('/admin/getAllPost'); 
     setUserData(response?.data?.data?.totalPosts)
     
@@ -48,7 +50,7 @@ export function PostView() {
     const { data: getAllPost, error, isLoading } = useQuery({
       queryKey: ['/admin/getAllPost'],
       queryFn: fetchUsers,  
-      staleTime: 60000, 
+      staleTime: 0,
     });
   const table = useTable();
     

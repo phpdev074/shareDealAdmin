@@ -19,7 +19,7 @@ import { Typography } from '@mui/material';
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { format } from 'date-fns';
-import { API_BASE_URL } from 'src/api/url';
+import { api,API_BASE_URL } from 'src/api/url';
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +27,18 @@ interface File {
   file: string;
   type: string;
   _id: string;  
+  reason: string;
+}
+
+interface Report {
+  userId: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+  reason: string;
+  comment: string;
+  _id: string;
 }
 
 interface Post {
@@ -41,14 +53,15 @@ interface Post {
   createdAt: string;
   updatedAt: string;
   __v: number;
-  options: any[];
+  options: any[]; 
   votes: any[];
   location: {
     type: string;
     coordinates: [number, number];
   };
   name: string;
-  reportedBy: string;
+  // reportedBy: string;
+  reportedBy?: Report[];
   postId: {
     itemName: string;
     categoryId: string;
@@ -62,7 +75,8 @@ interface Post {
     endDate: string;
     description: string;
     files: File[];
-   
+    reason: string;
+    
   };
 }
 
@@ -97,12 +111,35 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
   };
   const closeImage = () => {
     setSelectedImage(null)
-  }
+  };
+
+  const handleDelete = useCallback(async (id: string) => {
+        handleClosePopover();
+        const confirmed = window.confirm("Are you sure you want to delete?");
+    
+        if (confirmed) {
+            try {
+                const response = await api.delete(`/admin/deleteReportPost?id=${id}`);
+                
+                if (response.status === 200) {
+                    alert("User deleted successfully!");
+    
+                } else {
+                    alert("Failed to delete the user.");
+                }
+            } catch (error) {
+                console.error("Error deleting user:", error);
+                alert("An error occurred while deleting the user.");
+            }
+        }
+    
+    }, [handleClosePopover]);
+    
   
   return (
     <>
 
-    <Modal open={openModal} onClick={handleClosePopover}>
+             <Modal open={openModal} onClick={handleClosePopover}>
           <>
           <Icon
                   icon="mdi:close"
@@ -150,20 +187,56 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
                 
         
                 {/* Profile Picture */}
-                <Box display="flex" justifyContent="center" mb={4}>
-                  <Avatar
-                    alt={row.name}
-                    src={row.postId?.image }
-                    sx={{ width: 100, height: 100, border: "2px solid #ccc" }} 
-                  />
-                </Box>
+                {/* <Box display="flex" justifyContent="center" mb={4} gap={2} flexWrap="wrap">
+  {Array.isArray(row.postId?.files) && row.postId.files.length > 0 ? (
+    row.postId.files.map((file: any, index: number) => {
+      if (!file?.file) return null; // Skip invalid files
+
+      const imageUrl = file.file.startsWith("http")
+        ? file.file
+        : `${API_BASE_URL}${file.file}`;
+
+      return (
+        <Avatar
+          key={index}
+          alt={`Post Image ${index + 1}`}
+          src={imageUrl}
+          sx={{ width: 100, height: 100, border: "2px solid #ccc" }}
+        />
+      );
+    })
+  ) : (
+    <Typography>No Images Available</Typography>
+  )}
+                </Box> */}
+
         
         <Grid container spacing={3}>
           {/* First Row - Name & Username */}
           <Grid item xs={6}>
-            <Typography fontWeight={600} mb={0.5}>Name:</Typography>
+            <Typography fontWeight={600} mb={0.5}>Reported By:</Typography>
             <Box sx={{ border: "2px solid #ccc", p: 1,  }}>
               <Typography>{row.postId?.itemName || "N/A"}</Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography fontWeight={600} mb={0.5}>Reporte Count:</Typography>
+            <Box sx={{ border: "2px solid #ccc",  p: 1,  }}>
+              <Typography>{row.reportedBy ? row.reportedBy.length : 0 || "N/A"}</Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography fontWeight={600} mb={0.5}>Item Name:</Typography>
+            <Box sx={{ border: "2px solid #ccc",  p: 1,  }}>
+              <Typography>{row.postId?.itemName || "N/A"}</Typography>
+            </Box>
+          </Grid>
+        
+          {/* Second Row - Email & Phone Number */}
+          <Grid item xs={6}>
+            <Typography fontWeight={600} mb={0.5}>Report Reason:</Typography>
+            <Box sx={{ border: "2px solid #ccc",  p: 1,  }}>
+              <Typography>{row.reportedBy?.[0]?.reason || "N/A"}</Typography>
             </Box>
           </Grid>
           <Grid item xs={6}>
@@ -244,66 +317,38 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
     minHeight: "110px", 
   }}
 >
-  {row.files && row.files.length > 0 ? (
-    row.files.map((file: any, index: number) => {
-      
+{Array.isArray(row.postId?.files) && row.postId.files.length > 0 ? (
+    row.postId.files.map((file: any, index: number) => {
+      if (!file?.file) return null; 
+
       const imageUrl = file.file.startsWith("http")
         ? file.file
         : `${API_BASE_URL}${file.file}`;
 
       return (
-        <Box
+        <Avatar
           key={index}
+          alt={`Post Image ${index + 1}`}
+          src={imageUrl}
           sx={{
-            width: "100px",
-            height: "100px",
-            overflow: "hidden",
-            borderRadius: "8px",
-            backgroundColor: "#f0f0f0", 
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
-            transition: "all 0.5s ease-in-out", 
-            "&:hover": {
-            transform: "scale(1.1)", 
-            // border: "3px solid #999",
-          },
-        }}
-        onClick={() => setSelectedImage(imageUrl)} 
-      >
-
-
-
-          <img
-            src={imageUrl}
-            alt={`Post Image ${index + 1}`}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              display: "block",
-              transition: "opacity 0.3s ease-in-out",
-            }}
-            loading="lazy"
-            onError={(e) => {
-              e.currentTarget.src = "/placeholder.jpg"; 
-              e.currentTarget.style.opacity = "1"; 
-            }}
-          />
-        </Box>
+            width: 100,
+            height: 100,
+            border: "2px solid #ccc",
+            borderRadius: 0, 
+          }}
+        />
       );
     })
   ) : (
     <Typography>No Images Available</Typography>
   )}
-</Box>            
+    </Box>            
               </Box>
               </>
              </Modal>
 
 
-
+             {row.reportedBy?.map((report, index) => (
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
         <TableCell padding="checkbox">
           {/* <Checkbox disableRipple checked={selected} onChange={onSelectRow} /> */}
@@ -314,17 +359,17 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
             {/* <Avatar   src={row.files?.[0]?.file 
         ? `https://n8cw958h-4005.inc1.devtunnels.ms${row.files[0].file}` 
         : undefined} /> */}
-            {row.postId?.itemName}
+            {row.reportedBy?.[0]?.userId?.name}
           </Box>
         </TableCell>
 
         {/* <TableCell>{row.postId?.itemName}</TableCell> */}
 
-        <TableCell>{row.postId?.categoryId}</TableCell>
+        <TableCell>{row.postId?.itemName}</TableCell>
 
         <TableCell>{}</TableCell>
 
-        <TableCell>{(row.postId?.salePrice)}</TableCell>
+        <TableCell>{row.reportedBy?.[0]?.reason || "N/A"}</TableCell>
 
         <TableCell>{row.userReport}</TableCell>
 
@@ -338,6 +383,7 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
           </IconButton>
         </TableCell>
       </TableRow>
+      ))}
 
       <Popover
         open={!!openPopover}
@@ -367,7 +413,7 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
             View Details
           </MenuItem>
 
-          <MenuItem onClick={handleClosePopover} sx={{ color: 'error.main' }}>
+          <MenuItem onClick={() => handleDelete(row?._id)} sx={{ color: 'error.main' }}>
             {/* <Iconify icon="solar:trash-bin-trash-bold" /> */}
             Delete
           </MenuItem>
