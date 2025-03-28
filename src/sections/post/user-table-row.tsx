@@ -290,10 +290,10 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
               transition: "opacity 0.3s ease-in-out",
             }}
             loading="lazy"
-            onError={(e) => {
-              e.currentTarget.src = "/placeholder.jpg"; 
-              e.currentTarget.style.opacity = "1"; 
-            }}
+            // onError={(e) => {
+            //   e.currentTarget.src = "/placeholder.jpg"; 
+            //   e.currentTarget.style.opacity = "1"; 
+            // }}
           />
         </Box>
       );
