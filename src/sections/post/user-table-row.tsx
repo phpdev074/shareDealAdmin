@@ -105,14 +105,14 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
               const response = await api.delete(`/api/post?id=${id}`);
               
               if (response.status === 200) {
-                  alert("User deleted successfully!");
+                  alert("Post deleted successfully!");
   
               } else {
-                  alert("Failed to delete the user.");
+                  alert("Failed to delete the post.");
               }
           } catch (error) {
-              console.error("Error deleting user:", error);
-              alert("An error occurred while deleting the user.");
+              console.error("Error deleting post:", error);
+              alert("An error occurred while deleting the post.");
           }
       }
   

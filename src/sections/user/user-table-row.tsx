@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -61,14 +63,22 @@ type UserTableRowProps = {
   row: UserProps;
   selected: boolean;
   onSelectRow: () => void;
- 
+  onUserblocked: (id: string) => void;
+  onUserBlocked?: (user: UserProps) => void;
+  onUserDeleted: (id: string) => void;
+};
+type UserBlockRowProps = {
+  row: UserProps;
+  selected: boolean;
+  onSelectRow: () => void;
+  onUserUnblocked: (id: string) => void;
+  onUserUnBlocked?: (user: UserProps) => void;
 };
 
 
 
 
-
-export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) {
+export function UserTableRow({ row, selected, onSelectRow,onUserblocked,onUserBlocked,onUserDeleted }: UserTableRowProps) {
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const [openModal, setOpenModal] = useState(false);
 
@@ -90,12 +100,14 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
     const confirmed = window.confirm("Are you sure you want to delete?");
 
     if (confirmed) {
+      
         try {
             const response = await api.delete(`/admin/deleteAccountByAdmin?id=${id}`);
             
             if (response.status === 200) {
                 alert("User deleted successfully!");
-
+                onUserDeleted(row._id);
+                
             } else {
                 alert("Failed to delete the user.");
             }
@@ -119,6 +131,8 @@ const handleblock = useCallback(async (id: string) => {
     
     if (response?.status === 200) {
       alert("User has been blocked successfully!");
+      onUserblocked(row._id); 
+      onUserBlocked?.(row);
     } else {
       alert("Failed to block the user. Please try again.");
     }
@@ -126,7 +140,7 @@ const handleblock = useCallback(async (id: string) => {
     console.error(" Error blocking user:", error);
     alert("An error occurred while blocking the user.");
   }
-}, [handleClosePopover]);
+}, [handleClosePopover,onUserblocked]);
 
 
 
@@ -310,7 +324,7 @@ const handleblock = useCallback(async (id: string) => {
     </>
   );
 };
-export function UserBlockRow({ row, selected, onSelectRow }: UserTableRowProps) {
+export function UserBlockRow({ row, selected, onSelectRow,onUserUnblocked,onUserUnBlocked }: UserBlockRowProps  ) {
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
   const [openModal, setOpenModal] = useState(false);
 
@@ -338,7 +352,8 @@ export function UserBlockRow({ row, selected, onSelectRow }: UserTableRowProps) 
       
         if (response?.status === 200) {
           alert("User has been unblocked successfully!");
-          
+          onUserUnblocked(row._id); 
+          onUserUnBlocked?.(row);
         } else {
           alert("Failed to unblock the user. Please try again.");
         } 
@@ -347,7 +362,7 @@ export function UserBlockRow({ row, selected, onSelectRow }: UserTableRowProps) 
       console.error(" Error unblocking user:", error);
       alert("An error occurred while ubblocking the user.");
     }
-  }, [handleClosePopover]);
+  }, [handleClosePopover,onUserUnblocked]);
 
   return (
     <>

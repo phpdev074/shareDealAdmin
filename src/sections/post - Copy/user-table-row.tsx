@@ -123,14 +123,14 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
                 const response = await api.delete(`/admin/deleteReportPost?id=${id}`);
                 
                 if (response.status === 200) {
-                    alert("User deleted successfully!");
+                    alert("Post deleted successfully!");
     
                 } else {
-                    alert("Failed to delete the user.");
+                    alert("Failed to delete the post.");
                 }
             } catch (error) {
-                console.error("Error deleting user:", error);
-                alert("An error occurred while deleting the user.");
+                console.error("Error deleting post:", error);
+                alert("An error occurred while deleting the post.");
             }
         }
     
@@ -336,7 +336,7 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
             width: 100,
             height: 100,
             border: "2px solid #ccc",
-            borderRadius: 0, 
+            borderRadius: 1, 
             cursor: "pointer",
             transition: "all 0.5s ease-in-out",
             "&:hover": {
@@ -401,7 +401,7 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
 
 
 
-      <Modal
+            <Modal
               open={!!selectedImage}
               onClose={() => setSelectedImage(null)}
               sx={{

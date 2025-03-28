@@ -8,6 +8,9 @@ import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+
 import { api } from 'src/api/url';
 import { useQuery } from '@tanstack/react-query';
 
@@ -111,27 +114,38 @@ export function ReportPostView() {
                 ]}
               />
               <TableBody>
-                {userData
-                  .slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
-                  .map((row:any) => (
-                    <UserTableRow
-                      key={row?._id}
-                      row={row}
-                      selected={table.selected.includes(row?._id)}
-                      onSelectRow={() => table.onSelectRow(row?._id)}
-                    />
-                  ))}
+  {userData.length > 0 ? (
+    userData
+      .slice(
+        table.page * table.rowsPerPage,
+        table.page * table.rowsPerPage + table.rowsPerPage
+      )
+      .map((row: any) => (
+        <UserTableRow
+          key={row?._id}
+          row={row}
+          selected={table.selected.includes(row?._id)}
+          onSelectRow={() => table.onSelectRow(row?._id)}
+        />
+      ))
+  ) : (
+    <TableRow>
+      <TableCell colSpan={8} align="center">
+        <Typography variant="subtitle1" color="text.secondary">
+          No reported posts available
+        </Typography>
+      </TableCell>
+    </TableRow>
+  )}
 
-                <TableEmptyRows
-                  height={68}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, _users.length)}
-                />
+  <TableEmptyRows
+    height={68}
+    emptyRows={emptyRows(table.page, table.rowsPerPage, _users.length)}
+  />
 
-                {notFound && <TableNoData searchQuery={filterName} />}
-              </TableBody>
+  {notFound && <TableNoData searchQuery={filterName} />}
+</TableBody>
+
             </Table>
           </TableContainer>
         </Scrollbar>

@@ -38,8 +38,8 @@ import type { UserProps } from '../user-table-row';
 // ----------------------------------------------------------------------
 
 export function UserView() {
-  const [userData,setUserData] = useState([])
-  const [blockUserData,setBlockUserData] = useState([])
+  const [userData,setUserData] = useState<UserProps[]>([])
+  const [blockUserData,setBlockUserData] = useState<UserProps[]>([])
   const [value, setValue] = React.useState('1');
 
   const fetchUsers = async () => {
@@ -146,28 +146,48 @@ export function UserView() {
                 ]}
               />
               <TableBody>
-                {userData
-                  .slice(
-                    table.page * table.rowsPerPage,
-                    table.page * table.rowsPerPage + table.rowsPerPage
-                  )
-                  .map((row:any) => (
-                    <UserTableRow
-                      key={row._id}
-                      row={row}
-                      
-                      selected={table.selected.includes(row._id)}
-                      onSelectRow={() => table.onSelectRow(row._id)}
-                    />
-                  ))}
+  {userData.length > 0 ? (
+    userData
+      .slice(
+        table.page * table.rowsPerPage,
+        table.page * table.rowsPerPage + table.rowsPerPage
+      )
+      .map((row: any) => (
+        <UserTableRow
+          key={row._id}
+          row={row}
+          selected={table.selected.includes(row._id)}
+          onSelectRow={() => table.onSelectRow(row._id)}
+          onUserblocked={(id) => {
+            setUserData((prev) => prev.filter((u) => u._id !== id)); 
+          }}
+          onUserBlocked={(user: UserProps) => {
+            setUserData((prev) => prev.filter((u) => u._id !== user._id));
+            setBlockUserData((prev) => [...prev, user]); 
+          }}
+          onUserDeleted={(id) => {
+            setUserData((prev) => prev.filter((u) => u._id !== id));
+            setBlockUserData((prev) => prev.filter((u) => u._id !== id));
+          }}
+        />
+      ))
+  ) : (
+    <TableRow>
+      <TableCell colSpan={8} align="center">
+        <Typography variant="subtitle1" color="text.secondary">
+          No users available
+        </Typography>
+      </TableCell>
+    </TableRow>
+  )}
 
-                <TableEmptyRows
-                  height={68}
-                  emptyRows={emptyRows(table.page, table.rowsPerPage, _users.length)}
-                />
+  <TableEmptyRows
+    height={68}
+    emptyRows={emptyRows(table.page, table.rowsPerPage, _users.length)}
+  />
 
-                {notFound && <TableNoData searchQuery={filterName} />}
-              </TableBody>
+  {notFound && <TableNoData searchQuery={filterName} />}
+</TableBody>
             </Table>
           </TableContainer>
         </Scrollbar></TabPanel>
@@ -203,7 +223,7 @@ export function UserView() {
     <TableRow>
       <TableCell colSpan={5} align="center">
         <Typography variant="h6" color="textSecondary">
-          No user found
+          No blocked user found
         </Typography>
       </TableCell>
     </TableRow>
@@ -219,6 +239,13 @@ export function UserView() {
           row={row}
           selected={table.selected.includes(row._id)}
           onSelectRow={() => table.onSelectRow(row._id)}
+          onUserUnblocked={(id) => {
+            setBlockUserData((prev) => prev.filter((u) => u._id !== id)); 
+          }}
+          onUserUnBlocked={(user: UserProps) => {
+            setBlockUserData((prev) => prev.filter((u) => u._id !== user._id));
+            setUserData((prev) => [...prev, user]); 
+          }}
         />
       ))
   )}
